@@ -78,7 +78,7 @@ char *get_next_line(int fd)
 	char *str;
 	int bytes_read;
 	
-	if((fd < 0) || (BUFFER_SIZE <= 0) || (BUFFER_SIZE > INT_MAX))
+	if((fd < 0) || (fd >= OPEN_MAX) ||(BUFFER_SIZE <= 0) || (BUFFER_SIZE > INT_MAX))
 		return NULL;		
 	if(leftover[fd] == NULL)
 	{
