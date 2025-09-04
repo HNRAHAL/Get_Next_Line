@@ -1,6 +1,4 @@
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
 
 static void allocate_memory(char **str, int len)
 {
@@ -100,6 +98,7 @@ char *get_next_line(int fd)
 	return(line_without_newline(&leftover));
 }	
 
+// #include <stdio.h>
 // #include <fcntl.h>
 // int main()
 // {
