@@ -1,117 +1,131 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hrahal <hrahal@student.42abudhabi.ae>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/05 17:48:00 by hrahal            #+#    #+#             */
+/*   Updated: 2025/09/07 19:56:09 by hrahal           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-static void allocate_memory(char **str, int len)
-{
-	*str = malloc(len + 1);
-	if(!*str)
-		return;
-}
 
-static char *line_with_newline(char **leftover)
+static char	*null_check(char **leftover, char *line)
 {
-	int i;
-	int len;
-	int total_len;
-	char *temp;
-	char *line;
-	char *str;
-	i = 0;
-	while((*leftover)[i] != '\n')
-		i++;
-	len = i + 1;
-	allocate_memory(&line, len);
-	ft_strncpy(line, *leftover, len);
-	total_len = ft_strlen(*leftover);
-	total_len -= i;
-	allocate_memory(&str, total_len);
-	ft_strncpy(str, *leftover + len, total_len);
-	temp = str;
-	free(*leftover);
-	*leftover = temp;
-	return line;
-}
-
-static char *line_without_newline(char **leftover)
-{
-	int len;
-	char *line;
-	if(*leftover && **leftover)
-	{
-		len = ft_strlen(*leftover);
-		allocate_memory(&line, len);
-		ft_strcpy(line, *leftover);
-		free(*leftover);
-		*leftover = NULL;
-		return line;
-	}
-
 	free(*leftover);
 	*leftover = NULL;
-	return NULL;
+	return (line);
 }
 
-static void	update_leftover(char **static_var, char *buff, int bytes_read)
+static char	*line_with_newline(char **leftover) // error is here
 {
-	char *temp;
-	int total_len = 0;
-	char *str;
+	int			i;
+	int			len;
+	size_t		total_len;
+	char		*line;
+	char		*str;
 
-	if(bytes_read < 0)
-	{
-		free(*static_var);
-		*static_var = NULL;
-	}
-	buff[bytes_read] = '\0';
-	total_len = (ft_strlen(*static_var) + bytes_read);
-	allocate_memory(&str, total_len);
-	ft_strcpy(str, *static_var);
-	ft_strcat(str, buff);
-	temp = str;
-	free(*static_var);
-	*static_var = temp;
+	i = 0;
+	while ((*leftover)[i] && (*leftover)[i] != '\n')
+		i++;
+	len = i + 1;
+	line = malloc(len + 1);
+	if (!line)
+		return (null_check(leftover, NULL));
+	ft_strncpy(line, *leftover, len);
+	total_len = (ft_strlen(*leftover) - len);
+	if (total_len == 0)
+		return (null_check(leftover, line));
+	str = malloc(total_len + 1);
+	if (!str)
+		return (null_check(leftover, NULL));
+	ft_strncpy(str, *leftover + len, total_len);
+	free(*leftover);
+	*leftover = str;
+	return (line);
 }
 
-char *get_next_line(int fd)
+static char	*line_without_newline(char **leftover)
 {
-	static char *leftover = NULL;
-	char buff[BUFFER_SIZE + 1];
-	char *str;
-	int bytes_read;
-	
-	if((fd < 0) || (BUFFER_SIZE <= 0) || (BUFFER_SIZE > INT_MAX))
-		return NULL;		
-	if(leftover == NULL)
+	int		len;
+	char	*line;
+
+	if (*leftover && **leftover)
 	{
-		allocate_memory(&str, 1);
-		str[0] = '\0';
-		leftover = str;
+		len = ft_strlen(*leftover);
+		line = malloc(len + 1);
+		if (!line)
+			return (null_check(leftover, NULL));
+		ft_strcpy(line, *leftover);
+		return (null_check(leftover, line));
 	}
+	return (null_check(leftover, NULL));
+}
+
+static char	*update_leftover(char **leftover, char *buff, int bytes_read)
+{
+	char	*temp;
+	size_t	total_len;
+	char	*str;
+
+	total_len = 0;
+	if (bytes_read < 0)
+		return (null_check(leftover, NULL));
+	if (bytes_read > 0)
+	{
+		buff[bytes_read] = '\0';
+		total_len = (ft_strlen(*leftover) + bytes_read);
+		str = malloc(total_len + 1);
+		if (!str)
+			return (null_check(leftover, NULL));
+		ft_strcpy(str, *leftover);
+		ft_strcat(str, buff);
+		temp = str;
+		free(*leftover);
+		*leftover = temp;
+	}
+	return (*leftover);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*leftover = NULL;
+	char		buff[BUFFER_SIZE + 1];
+	int			bytes_read;
+
+	if ((fd < 0) || (BUFFER_SIZE <= 0) || (BUFFER_SIZE > INT_MAX))
+		return (NULL);
+	if (leftover == NULL)
+		leftover = strdup("");
 	bytes_read = 1;
-	while((ft_strchr(leftover, '\n') == NULL && bytes_read > 0))
+	while ((ft_strchr(leftover, '\n') == NULL && bytes_read > 0))
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
-		if(bytes_read > 0)
-			update_leftover(&leftover, buff, bytes_read);
+		update_leftover(&leftover, buff, bytes_read);
 	}
-	if(ft_strchr(leftover, '\n') != NULL)
-		return(line_with_newline(&leftover));
-	return(line_without_newline(&leftover));
-}	
+	if (ft_strchr(leftover, '\n') != NULL)
+		return (line_with_newline(&leftover));
+	return (line_without_newline(&leftover));
+}
 
-// #include <stdio.h>
 // #include <fcntl.h>
-// int main()
+// #include <stdio.h>
+
+// int	main(void)
 // {
 // 	int i;
 // 	int fd;
 // 	char *line;
-// 	fd = open("text.txt", O_RDONLY);
-// 	if(fd == -1)
+// 	fd = open("tst.txt", O_RDONLY);
+// 	if (fd == -1)
 // 		perror("Error");
 // 	i = 1;
-// 	while((line = get_next_line(fd)))
+// 	while ((line = get_next_line()))
 // 	{
-// 		printf("line[%d]: %s",i, line);
+// 		// printf("line[%d]: %s",i, line);
 // 		i++;
 // 		free(line);
 // 	}
