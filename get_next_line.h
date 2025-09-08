@@ -6,7 +6,7 @@
 /*   By: hrahal <hrahal@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 17:48:07 by hrahal            #+#    #+#             */
-/*   Updated: 2025/09/07 17:54:48 by hrahal           ###   ########.fr       */
+/*   Updated: 2025/09/08 17:35:14 by hrahal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 100
 # endif
+
+// #ifdef BUFFER_SIZE
+// # if BUFFER_SIZE > 1000000
+// # error "too big"
+// #endif
 
 # include <limits.h>
 # include <stdlib.h>

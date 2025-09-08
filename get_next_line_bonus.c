@@ -6,7 +6,7 @@
 /*   By: hrahal <hrahal@student.42abudhabi.ae>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 17:48:00 by hrahal            #+#    #+#             */
-/*   Updated: 2025/09/07 19:55:56 by hrahal           ###   ########.fr       */
+/*   Updated: 2025/09/08 19:51:16 by hrahal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*get_next_line(int fd)
 		|| (fd > FD_MAX))
 		return (NULL);
 	if (leftover[fd] == NULL)
-		leftover[fd] = strdup("");
+		leftover[fd] = strdup(""); //change to ft_strdup
 	bytes_read = 1;
 	while ((ft_strchr(leftover[fd], '\n') == NULL && bytes_read > 0))
 	{
@@ -110,30 +110,3 @@ char	*get_next_line(int fd)
 		return (line_with_newline(&leftover[fd]));
 	return (line_without_newline(&leftover[fd]));
 }
-
-// #include <stdio.h>
-// #include <fcntl.h>
-
-// int main(int argc, char **argv)
-// {
-//     int i;
-//     int j;
-//     int fd;
-//     char *line;
-//     i = 1;
-//     while(i < argc)
-//     {
-//         fd = open(argv[i], O_RDONLY);
-//         j = 0;
-//         while ((line = get_next_line(fd)))
-//         {
-//             printf("line[%d][%d]: %s" ,i , j,line);
-//             j++;
-//             free(line);
-//         }
-//         printf("\n");
-//         close(fd);
-//         i++;
-//     }
-//     return (0);
-// }
