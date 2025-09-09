@@ -11,6 +11,7 @@
 #include <limits.h>
 #include <string.h>
 #include <unistd.h>
+#include <stddef.h>
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);

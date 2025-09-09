@@ -11,7 +11,7 @@ static char	*line_with_newline(char **leftover)
 {
 	int			i;
 	int			len;
-	int		total_len;
+	int			total_len;
 	char		*line;
 	char		*str;
 
@@ -57,7 +57,7 @@ static char	*line_without_newline(char **leftover)
 static char	*update_leftover(char **leftover, char *buff, int bytes_read)
 {
 	char	*temp;
-	int	total_len;
+	size_t	total_len;
 	char	*str;
 
 	total_len = 0;
@@ -81,18 +81,18 @@ static char	*update_leftover(char **leftover, char *buff, int bytes_read)
 
 char	*get_next_line(int fd)
 {
-	static char	*leftover[FD_MAX];
-	char		*buff;
-	int			bytes_read;
+	static char		*leftover[FD_MAX];
+	char			*buff;
+	ssize_t			bytes_read;
 
-	if ((fd < 0) || (BUFFER_SIZE <= 0) || (BUFFER_SIZE > INT_MAX) || (fd > FD_MAX))
+	if ((fd < 0) || (BUFFER_SIZE <= 0) || ((size_t)BUFFER_SIZE > SIZE_MAX - 1) || (fd > FD_MAX))
 		return (NULL);
 	if (leftover[fd] == NULL)
 		leftover[fd] = ft_strdup("");
 	bytes_read = 1;
 	while ((ft_strchr(leftover[fd], '\n') == NULL && bytes_read > 0))
 	{
-		buff = malloc(BUFFER_SIZE + 1);
+		buff = malloc((size_t)BUFFER_SIZE + 1);
 		if(!buff)	
 			return NULL;
 		bytes_read = read(fd, buff , BUFFER_SIZE);
