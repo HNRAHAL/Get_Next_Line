@@ -7,11 +7,11 @@ static char	*null_check(char **leftover, char *line)
 	return (line);
 }
 
-static char	*line_with_newline(char **leftover) // error is here
+static char	*line_with_newline(char **leftover)
 {
 	int			i;
 	int			len;
-	size_t		total_len;
+	int		total_len;
 	char		*line;
 	char		*str;
 
@@ -57,7 +57,7 @@ static char	*line_without_newline(char **leftover)
 static char	*update_leftover(char **leftover, char *buff, int bytes_read)
 {
 	char	*temp;
-	size_t	total_len;
+	int	total_len;
 	char	*str;
 
 	total_len = 0;
@@ -104,4 +104,25 @@ char	*get_next_line(int fd)
 	return (line_without_newline(&leftover[fd]));
 }
 
+// #include <stdio.h>
+// #include <fcntl.h>
+// int main(int argc, char **argv)
+// {
+// 	int i = 1;
+// 	int fd;
+// 	char *line;
 
+// 	while(i < argc)
+// 	{
+// 		fd = open(argv[i], O_RDONLY);
+// 		if(fd < 0)
+// 			perror("error");
+// 		while((line = get_next_line(fd)))
+// 		{
+// 			printf("%s", line);
+// 			free(line);
+// 		}
+// 		close(fd);
+// 		i++;
+// 	}
+// }

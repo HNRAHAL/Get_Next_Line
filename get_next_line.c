@@ -107,24 +107,24 @@ char	*get_next_line(int fd)
 }
 
 
-// #include <stdio.h>
-// #include <fcntl.h>
-// int main()
-// {
-// 	int i;
-// 	int fd;
-// 	// char buf[10] = {0};
-// 	char *line;
-// 	fd = open("t.txt", O_RDONLY);
-// 	if(fd == -1)
-// 		perror("Error");
-// 	i = 1;
-// 	while((line = get_next_line(fd)))
-// 	{
-// 		printf("line[%d]: %s",i, line);
-// 		i++;
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return (0);
-// }
+#include <stdio.h>
+#include <fcntl.h>
+int main()
+{
+	int i;
+	int fd;
+	// char buf[10] = {0};
+	char *line;
+	fd = open("t.txt", O_RDONLY);
+	if(fd == -1)
+		perror("Error");
+	i = 1;
+	while((line = get_next_line(fd)))
+	{
+		printf("line[%d]: %s",i, line);
+		i++;
+		free(line);
+	}
+	close(fd);
+	return (0);
+}
