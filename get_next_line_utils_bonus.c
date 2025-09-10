@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hrahal <hrahal@student.42abudhabi.ae>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/10 09:59:21 by hrahal            #+#    #+#             */
+/*   Updated: 2025/09/10 13:50:54 by hrahal           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
-int		ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
 	int	i;
 
@@ -46,8 +58,8 @@ char	*ft_strncpy(char *dst, const char *src, int len)
 char	*ft_strcat(char *dst, const char *src)
 
 {
-	int	len;
-	int	i;
+	int		len;
+	int		i;
 
 	if (!dst || !src)
 		return (NULL);
@@ -62,22 +74,24 @@ char	*ft_strcat(char *dst, const char *src)
 	return (dst);
 }
 
-char *ft_strdup(char *str)
+char	*ft_strdup(char *str)
 {
-	char *new_str;
-	int len;
-	int i;
-	if(!str)
-		return NULL;
+	char	*new_str;
+	int		len;
+	int		i;
+
+	if (!str)
+		return (NULL);
 	len = ft_strlen(str);
 	new_str = malloc(len + 1);
-
+	if (!new_str)
+		return (NULL);
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		new_str[i] = str[i];
 		i++;
 	}
 	new_str[i] = '\0';
-	return new_str;
+	return (new_str);
 }
